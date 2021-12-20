@@ -6,7 +6,7 @@ import { connect } from "./db/connect";
 import usersRouter from "./routes/userRoutes";
 import postsRouter from "./routes/postRoutes";
 import loginRouter from "./routes/loginRoutes";
-import { errorHandler } from './error-handler/error-handler';
+import { errorHandler } from "./error-handler/error-handler";
 import { createAdminUser } from "./utils/createAdmin";
 
 dotenv.config();
@@ -28,18 +28,19 @@ app.use(express.urlencoded({ extended: false }));
 // Create admin app utility
 createAdminUser();
 
-app.get('/', (req, res) => {
-  res.send('The sedulous hyena ate the antelope!');
+app.get("/", (req, res) => {
+  res.send("The sedulous hyena ate the antelope!");
 });
 
-app.use('/api/users', usersRouter);
-app.use('/api/posts', postsRouter);
-app.use('/api/login', loginRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/posts", postsRouter);
+app.use("/api/login", loginRouter);
 
 app.use(errorHandler);
 
-app.listen(PORT || 3000, () => {
+const server = app.listen(PORT || 3000, () => {
   console.log(`server is listening on ${PORT}`);
-
   connect();
 });
+
+export default server;

@@ -16,6 +16,7 @@ exports.loginController = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const loginService_1 = require("../services/loginService");
+const error_model_1 = require("../error-handler/error-model");
 function loginController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -24,25 +25,25 @@ function loginController(req, res, next) {
             const user = yield (0, loginService_1.getUserService)(username);
             const passwordCorrect = user === null ? false : yield bcrypt_1.default.compare(password, user.passwordHash);
             if (!user || !passwordCorrect) {
-                res.status(401).json({
-                    error: "invalid user or password",
-                });
+                throw new error_model_1.ErrorModel(401, "Unauthenticated");
             }
             const userForToken = {
-                id: user._id,
+                id: user.id,
                 username: user.username,
             };
             const token = jsonwebtoken_1.default.sign(userForToken, process.env.SECRET, {
                 expiresIn: 60 * 60 * 24 * 7,
             });
             res.send({
+                id: user.id,
                 name: user.name,
                 username: user.username,
+                role: user.role,
                 token,
             });
         }
         catch (error) {
-            next(error);
+            next(new error_model_1.ErrorModel(401, "Unauthenticated"));
         }
     });
 }

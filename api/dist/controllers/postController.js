@@ -17,10 +17,12 @@ const Post_1 = __importDefault(require("../models/Post"));
 const User_1 = __importDefault(require("../models/User"));
 const mongodb_1 = require("mongodb");
 const postService_1 = require("../services/postService");
+const error_model_1 = require("../error-handler/error-model");
 function getPostsController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const posts = yield (0, postService_1.getPostsService)();
+            const { userId } = req;
+            const posts = yield (0, postService_1.getPostsService)(userId);
             console.log(posts);
             res.json(posts);
         }
@@ -48,17 +50,16 @@ function createPostController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { userId } = req;
-            const { content } = req.body;
+            console.log({ userId });
+            const { content, created } = req.body;
             const user = yield User_1.default.findById(userId);
             if (!content) {
-                return res.status(400).json({
-                    error: 'required "content" field is missing',
-                });
+                throw new error_model_1.ErrorModel(404, "Bad Request");
             }
             const newpost = new Post_1.default({
                 content,
-                created: new Date(),
-                user: user._id
+                created,
+                user: user._id,
             });
             const response = yield (0, postService_1.createPostService)(newpost);
             user.posts = user.posts.concat(response._id);
@@ -66,6 +67,7 @@ function createPostController(req, res, next) {
             res.json(response);
         }
         catch (error) {
+            console.log(error);
             next(error);
         }
     });
@@ -76,9 +78,6 @@ function updatePostController(req, res, next) {
         try {
             const { id } = req.params;
             const post = yield (0, postService_1.updatePostService)(new mongodb_1.ObjectId(id), req.body);
-            // return post
-            //   ? res.json(post)
-            //   : res.json({ status: 404, message: "Post not found" });
             res.json(post);
         }
         catch (error) {
@@ -90,12 +89,12 @@ exports.updatePostController = updatePostController;
 function deletePostController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const { userId } = req;
             const { id } = req.params;
-            const post = yield (0, postService_1.deletePostService)(new mongodb_1.ObjectId(id));
-            console.log(post);
-            // return post
-            //   ? res.status(204).end()
-            //   : res.json({ status: 404, message: "Post not found" });
+            const user = yield User_1.default.findById({ "_id": userId });
+            yield (0, postService_1.deletePostService)(new mongodb_1.ObjectId(id));
+            user.posts = user.posts.filter(post => post._id.toString() !== id);
+            yield user.save();
             res.status(204).end();
         }
         catch (error) {

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const handleErrors = (error, request, res, next) => {
     console.error("message: -------", error.message);
+    console.log('code', error.code);
     const { message } = error;
     if (message.includes("ValidationError")) {
         res.status(409).send({

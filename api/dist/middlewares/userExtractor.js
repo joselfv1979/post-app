@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 module.exports = (request, response, next) => {
     const authorization = request.get('authorization');
+    console.log({ authorization });
     let token = '';
     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
         token = authorization.substring(7);

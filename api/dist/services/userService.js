@@ -18,9 +18,9 @@ function getUsersService() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             console.log("searching");
-            return yield User_1.default.find().populate('posts', {
+            return yield User_1.default.find().populate("posts", {
                 content: 1,
-                created: 1
+                created: 1,
             });
         }
         catch (error) {

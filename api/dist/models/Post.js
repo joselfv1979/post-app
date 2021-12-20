@@ -6,15 +6,15 @@ const PostSchema = new mongoose_1.Schema({
     created: { type: Date, required: true },
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'User'
-    }
+        ref: "User",
+    },
 });
-PostSchema.set('toJSON', {
+PostSchema.set("toJSON", {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id;
         delete returnedObject._id;
         delete returnedObject.__v;
-    }
+    },
 });
-exports.default = (0, mongoose_1.model)('Post', PostSchema);
+exports.default = (0, mongoose_1.model)("Post", PostSchema);
 //# sourceMappingURL=Post.js.map

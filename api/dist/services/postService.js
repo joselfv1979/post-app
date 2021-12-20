@@ -14,11 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePostService = exports.updatePostService = exports.createPostService = exports.getPostService = exports.getPostsService = void 0;
 const Post_1 = __importDefault(require("../models/Post"));
-function getPostsService() {
+function getPostsService(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log("searching");
-            return yield Post_1.default.find().populate("user", {
+            return yield Post_1.default.find({ user: userId }).populate("user", {
                 username: 1,
                 name: 1,
             });

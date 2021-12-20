@@ -17,6 +17,7 @@ const User_1 = __importDefault(require("../models/User"));
 const mongodb_1 = require("mongodb");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userService_1 = require("../services/userService");
+const error_model_1 = require("../error-handler/error-model");
 function getUsersController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -34,12 +35,9 @@ function getUserController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { id } = req.params;
-            const user = yield (0, userService_1.getUserService)(new mongodb_1.ObjectId(id));
-            console.log(user);
-            // return user
-            //   ? res.json(user)
-            //   : res.json({ status: 404, message: "User not found" });
-            res.json(user);
+            const data = yield (0, userService_1.getUserService)(new mongodb_1.ObjectId(id));
+            console.log({ data });
+            res.json(data);
         }
         catch (error) {
             next(error);
@@ -50,7 +48,11 @@ exports.getUserController = getUserController;
 function createUserController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log(req.body);
             const { name, username, email, password, role } = req.body;
+            if (!name || !username || !email || !password || !role) {
+                throw new error_model_1.ErrorModel(404, "Bad request");
+            }
             const SaltRounds = 10;
             const passwordHash = yield bcrypt_1.default.hash(password, SaltRounds);
             const newuser = new User_1.default({
@@ -73,6 +75,10 @@ function updateUserController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { id } = req.params;
+            const { name, username, email } = req.body;
+            if (!name || !username || !email) {
+                throw new error_model_1.ErrorModel(404, "Bad request");
+            }
             const user = yield (0, userService_1.updateUserService)(new mongodb_1.ObjectId(id), req.body);
             // return user
             //   ? res.json(user)

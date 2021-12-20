@@ -10,7 +10,7 @@ export async function loginController(
   next: NextFunction
 ) {
   try {
-    const { body } = req;
+    const { body } = req; 
 
     const { username, password } = body;
     const user = await getUserService(username);
