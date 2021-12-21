@@ -5,15 +5,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connect = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const { MONGO_DB_URI, MONGO_DB_URI_TEST, NODE_ENV } = process.env;
 const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
 };
+const connectionString = process.env.NODE_ENV === 'test'
+    ? process.env.MONGO_DB_URI_TEST
+    : process.env.MONGO_DB_URI;
+if (!connectionString) {
+    console.log('UUUUURRRRRIIIIII', MONGO_DB_URI);
+    console.error('Remember to have environment variables on a  file .env');
+}
 //connection mongodb atlas
 const connect = () => {
     mongoose_1.default
-        .connect(process.env.MONGO_DB_URI, options)
+        .connect(connectionString, options)
         .then(() => console.log("Database connected!"))
         .catch((err) => console.log(err));
 };

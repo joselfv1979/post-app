@@ -5,11 +5,11 @@
   "main": "appserver.js",
   "scripts": {
     "ts": "tsc -w",
-    "start": "tsc && node dist/server.js",
-    "dev": "nodemon src/server.ts",
+    "start": "NODE_ENV=production tsc && node dist/server.js",
+    "dev": "NODE_ENV=development nodemon src/server.ts",
     "start:test": "NODE_ENV=test node server.ts",
     "test": "NODE_ENV=test PORT=1234 jest --verbose --silent=false --config jest.config.js tests/user.test.ts",
-    "test:watch": "npm run test -- --watch --silent=false"
+    "test:watch": "npm run test -- --watch"
   },
   "author": "",
   "license": "ISC",

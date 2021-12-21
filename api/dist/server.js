@@ -45,16 +45,16 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 // Create admin app utility
 (0, createAdmin_1.createAdminUser)();
-app.get('/', (req, res) => {
-    res.send('The sedulous hyena ate the antelope!');
+app.get("/", (req, res) => {
+    res.send("The sedulous hyena ate the antelope!");
 });
-app.use('/api/users', userRoutes_1.default);
-app.use('/api/posts', postRoutes_1.default);
-app.use('/api/login', loginRoutes_1.default);
+app.use("/api/users", userRoutes_1.default);
+app.use("/api/posts", postRoutes_1.default);
+app.use("/api/login", loginRoutes_1.default);
 app.use(error_handler_1.errorHandler);
 const server = app.listen(PORT || 3000, () => {
     console.log(`server is listening on ${PORT}`);
     (0, connect_1.connect)();
 });
-module.exports = { app, server };
+exports.default = server;
 //# sourceMappingURL=server.js.map

@@ -1,4 +1,5 @@
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -9,9 +10,7 @@ import loginRouter from "./routes/loginRoutes";
 import { errorHandler } from "./error-handler/error-handler";
 import { createAdminUser } from "./utils/createAdmin";
 
-dotenv.config();
-
-const PORT: number = parseInt(process.env.PORT as string, 10);
+const PORT = Number(process.env.PORT);
 
 if (!process.env.PORT) {
   process.exit(1);
