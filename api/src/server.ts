@@ -7,7 +7,7 @@ import { connect } from "./db/connect";
 import usersRouter from "./routes/userRoutes";
 import postsRouter from "./routes/postRoutes";
 import loginRouter from "./routes/loginRoutes";
-import { errorHandler } from "./error-handler/error-handler";
+import { errorHandler } from "./middlewares/errorHandler";
 import { createAdminUser } from "./utils/createAdmin";
 
 const PORT = Number(process.env.PORT);

@@ -12,7 +12,7 @@ import {
   deletePostService,
 } from "../services/postService";
 
-import { ErrorModel } from "../error-handler/error-model";
+import { ErrorModel } from "../models/ErrorModel";
 
 export async function getPostsController(
   req: AuthRequest,
@@ -22,7 +22,6 @@ export async function getPostsController(
   try {
     const { userId } = req;
     const posts = await getPostsService(userId);
-    console.log(posts);
     res.json(posts);
   } catch (error) {
     next(error);

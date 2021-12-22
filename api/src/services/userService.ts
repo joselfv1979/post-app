@@ -3,7 +3,6 @@ import { ObjectId } from "mongodb";
 
 export async function getUsersService() {
   try {
-    console.log("searching");
     return await User.find().populate("posts", {
       content: 1,
       created: 1,

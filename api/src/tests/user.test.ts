@@ -1,35 +1,57 @@
 import request from "supertest";
 import server from "../server";
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
 import User from "../models/User";
+
 const api = request(server);
+
+const getUsers = async () => {
+  const users = await api.get("/api/users");
+  return users;
+};
 
 beforeAll((done) => {
   done();
 });
 
-describe("User Endpoints", () => {
-  it("GET /user should show all users", async () => {
-    const res = await api.get("/api/users");
-    expect(res.status).toEqual(200);
-    expect(res.type).toEqual(expect.stringContaining("json"));
+describe("Creating a new user", () => {
+  beforeEach(async () => {
+    const res = await User.deleteMany({});
   });
+  it("POST /user should create a new user successfully", async () => {
+    const usersAtStart = await getUsers();
 
+    const newUser = {
+      name: "John",
+      username: "john",
+      email: "john@gmail.com",
+      password: "1234",
+      role: "user",
+    };
+    await api.post("/api/users").send(newUser).expect(201);
+
+    const usersAtEnd = await getUsers();
+
+    expect(usersAtEnd.body).toHaveLength(usersAtStart.body.length + 1);
+
+    const usernames = usersAtEnd.body.map((u) => u.username);
+    expect(usernames).toContain(newUser.username);
+  });
+});
+
+describe("Checking log in endpoint", () => {
   it("POST /login should return 200 & token if request params are correct", async () => {
-    const user = { username: "admin", password: "1234" };
+    const user = { username: "john", password: "1234" };
 
     const res = await api.post("/api/login").send(user);
-    console.log("response", res.body);    
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty("token");
   });
 
   it("POST /login should return 401 if request params are incorrect", async () => {
-    const user = { username: "admin", password: "" };
+    const user = { username: "john", password: "1111" };
 
     const res = await api.post("/api/login").send(user);
-    console.log("response", res.error);  
     expect(res.status).toBe(401);
     expect(res.error.text).toBe("Unauthenticated");
   });

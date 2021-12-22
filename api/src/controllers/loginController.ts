@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { getUserService } from "../services/loginService";
-import { ErrorModel } from "../error-handler/error-model";
+import { ErrorModel } from "../models/ErrorModel";
 
 export async function loginController(
   req: Request,

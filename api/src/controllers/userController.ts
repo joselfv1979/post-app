@@ -11,7 +11,7 @@ import {
   deleteUserService,
 } from "../services/userService";
 
-import { ErrorModel } from "../error-handler/error-model";
+import { ErrorModel } from "../models/ErrorModel";
 
 export async function getUsersController(
   req: Request,
@@ -20,7 +20,6 @@ export async function getUsersController(
 ) {
   try {
     const users = await getUsersService();
-    console.log(users);
     res.json(users);
   } catch (error) {
     next(error);
@@ -35,7 +34,6 @@ export async function getUserController(
   try {
     const { id } = req.params;
     const data = await getUserService(new ObjectId(id));
-    console.log({ data });
     res.json(data);
   } catch (error) {
     next(error);
@@ -48,7 +46,6 @@ export async function createUserController(
   next: NextFunction
 ) {
   try {
-    console.log(req.body);
     const { name, username, email, password, role } = req.body;
     
     if(!name || !username || !email || !password || !role) {
@@ -65,7 +62,7 @@ export async function createUserController(
       role,
     });
     const response = await createUserService(newuser);
-    res.json(response);
+    res.status(201).json(response);
   } catch (error) {
     next(error);
   }
