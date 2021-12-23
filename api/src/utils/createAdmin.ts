@@ -3,8 +3,7 @@ import User, { IUser } from "../models/User";
 
 export async function createAdminUser() {
   try {
-    if (process.env.NODE_ENV !== "test") {
-      const adminUser = await User.findOne({ username: "admin" });
+    const adminUser = await User.findOne({ username: "admin" });
       if (adminUser) {        
         return;
       } else {
@@ -18,7 +17,6 @@ export async function createAdminUser() {
         });
         await admin.save();
       }
-    }
   } catch (error) {
     console.log(error);
   }

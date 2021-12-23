@@ -49,7 +49,7 @@ export async function createUserController(
     const { name, username, email, password, role } = req.body;
     
     if(!name || !username || !email || !password || !role) {
-      throw new ErrorModel(404, "Bad request");
+      throw new ErrorModel(400, "Bad request");
     }
     
     const SaltRounds = 10;
@@ -77,7 +77,7 @@ export async function updateUserController(
     const { id } = req.params;
     const { name, username, email } = req.body;
     if (!name || !username || !email) {
-      throw new ErrorModel(404, "Bad request");
+      throw new ErrorModel(400, "Bad request");
     }
     const user = await updateUserService(new ObjectId(id), req.body);
     // return user
@@ -96,13 +96,17 @@ export async function deleteUserController(
 ) {
   try {
     const { id } = req.params;
-    const user = await deleteUserService(new ObjectId(id));
-    console.log(user);
+    const user = await getUserService(new ObjectId(id));
+    console.log('user service ---------',user);
+    if(!user) {
+      throw new ErrorModel(404, "User not found");
+    }
+    await deleteUserService(new ObjectId(id));
     // return user
     //   ? res.status(204).end()
     //   : res.json({ status: 404, message: "User not found" });
     res.status(204).end();
   } catch (error) {
-    next(error);
+    next(new ErrorModel(404, "User not found"));
   }
 }
