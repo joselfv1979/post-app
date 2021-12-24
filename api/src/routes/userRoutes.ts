@@ -8,12 +8,14 @@ import {
   deleteUserController
 } from "../controllers/userController";
 
+const userExtractor = require('../middlewares/userExtractor');
+
 const usersRouter = Router();
 
 usersRouter.get("/", getUsersController);
-usersRouter.get("/:id", getUserController);
+usersRouter.get("/:id", userExtractor, getUserController);
 usersRouter.post("/", createUserController);
-usersRouter.put('/:id', updateUserController);
-usersRouter.delete('/:id', deleteUserController);
+usersRouter.put('/:id', userExtractor, updateUserController);
+usersRouter.delete('/:id', userExtractor, deleteUserController);
   
 export default usersRouter;

@@ -7,7 +7,6 @@ export interface AuthRequest extends Request {
 
 module.exports = (request: AuthRequest, response: Response, next: NextFunction) => {
     const authorization = request.get('authorization');
-    console.log({authorization});
     
     let token = '';
 

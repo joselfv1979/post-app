@@ -8,7 +8,7 @@
     "start": "NODE_ENV=production tsc && node dist/server.js",
     "dev": "NODE_ENV=development nodemon src/server.ts",
     "start:test": "NODE_ENV=test node server.ts",
-    "test": "NODE_ENV=test PORT=1234 jest --verbose --silent=false --config jest.config.js tests/user.test.ts",
+    "test": "NODE_ENV=test PORT=1234 jest --verbose --silent=false --config jest.config.js tests/post.test.ts",
     "test:watch": "npm run test -- --watch"
   },
   "author": "",

@@ -50,8 +50,6 @@ export async function createPostController(
 ) {
   try {
     const { userId } = req;
-    console.log({ userId });
-
     const { content, created } = req.body;
 
     const user = await User.findById(userId);
@@ -71,7 +69,7 @@ export async function createPostController(
     user.posts = user.posts.concat(response._id);
     await user.save();
 
-    res.json(response);
+    res.status(201).json(response);
   } catch (error) {
     console.log(error);
     next(error);
