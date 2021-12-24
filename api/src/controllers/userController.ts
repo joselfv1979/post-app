@@ -22,7 +22,7 @@ export async function getUsersController(
     const users = await getUsersService();
     res.json(users);
   } catch (error) {
-    next(error);
+    next(new ErrorModel(404, "Users not found"));
   }
 }
 
@@ -36,7 +36,7 @@ export async function getUserController(
     const data = await getUserService(new ObjectId(id));
     res.json(data);
   } catch (error) {
-    next(error);
+    next(new ErrorModel(404, "User not found"));
   }
 }
 
@@ -47,11 +47,11 @@ export async function createUserController(
 ) {
   try {
     const { name, username, email, password, role } = req.body;
-    
-    if(!name || !username || !email || !password || !role) {
+
+    if (!name || !username || !email || !password || !role) {
       throw new ErrorModel(400, "Bad request");
     }
-    
+
     const SaltRounds = 10;
     const passwordHash = await bcrypt.hash(password, SaltRounds);
     const newuser: IUser = new User({
@@ -80,10 +80,8 @@ export async function updateUserController(
       throw new ErrorModel(400, "Bad request");
     }
     const user = await updateUserService(new ObjectId(id), req.body);
-    // return user
-    //   ? res.json(user)
-    //   : res.json({ status: 404, message: "User not found" });
-    res.json(user);
+
+    res.status(201).json(user);
   } catch (error) {
     next(error);
   }
@@ -96,15 +94,8 @@ export async function deleteUserController(
 ) {
   try {
     const { id } = req.params;
-    const user = await getUserService(new ObjectId(id));
-    console.log('user service ---------',user);
-    if(!user) {
-      throw new ErrorModel(404, "User not found");
-    }
     await deleteUserService(new ObjectId(id));
-    // return user
-    //   ? res.status(204).end()
-    //   : res.json({ status: 404, message: "User not found" });
+
     res.status(204).end();
   } catch (error) {
     next(new ErrorModel(404, "User not found"));

@@ -1,5 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 import { IPost } from './Post';
+import { ErrorModel } from "./ErrorModel";
 
 export interface IUser extends Document {
     name: string,
@@ -12,8 +13,8 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema({
     name: {type: String, required: true},
-    username: {type: String, required: true},
-    email: {type: String, required: true},
+    username: {type: String, required: true, unique: true},
+    email: {type: String, required: true, unique: true},
     passwordHash: {type: String, required: true},
     role: {type: String, required: true},
     posts: [{
@@ -31,6 +32,12 @@ UserSchema.set('toJSON', {
     }
 });
 
-// const User = model('User', userSchema)
+UserSchema.post('save', function(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+      next(new ErrorModel(409, "Email already exists"));
+    } else {
+      next();
+    }
+  });
 
 export default model<IUser>('User', UserSchema);

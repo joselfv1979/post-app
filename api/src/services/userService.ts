@@ -1,5 +1,6 @@
 import User, { IUser } from "../models/User";
 import { ObjectId } from "mongodb";
+import { ErrorModel } from "./../models/ErrorModel";
 
 export async function getUsersService() {
   try {
@@ -25,6 +26,9 @@ export async function createUserService(user: IUser) {
     const savedUser = await user.save();
     return savedUser;
   } catch (error) {
+    if (error instanceof ErrorModel) {
+      throw new ErrorModel(error.status, error.message)
+    }  
     throw Error(error);
   }
 }

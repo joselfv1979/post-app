@@ -5,7 +5,7 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
   console.log('Error handling middleware called.');
   console.log('Path:', req.path);
   console.log(err);
-  if (err instanceof ErrorModel) {   
+  if (err instanceof ErrorModel) { 
     res.status(err.status).send(err.message);
   } else {
     // For unhandled errors.
