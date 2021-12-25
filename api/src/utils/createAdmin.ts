@@ -4,7 +4,7 @@ import User, { IUser } from "../models/User";
 export async function createAdminUser() {
   try {
     const adminUser = await User.findOne({ username: "admin" });
-      if (adminUser) {        
+      if (adminUser) {    
         return;
       } else {
         const passwordHash = await bcrypt.hash("1234", 10);
