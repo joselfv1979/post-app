@@ -1,17 +1,9 @@
 import request from "supertest";
 import server from "../server";
 import mongoose from "mongoose";
+import { loginUser } from "./helpers";
 
 const api = request(server);
-
-interface AuthRequest {
-  username: string;
-  password: string;
-}
-
-const loginUser = async (user: AuthRequest) => {
-  return await api.post("/api/login").send(user);
-};
 
 describe("Creating a new user", () => {
   it("should be created successfully & return 201 with a valid user", async () => {
@@ -86,11 +78,11 @@ describe("Updating a user", () => {
       username: "john",
       email: "john@gmail.com",
     };
-    const res = await loginUser(user);
+    const { body } = await loginUser(user);
     const updateRes = await api
-      .put(`/api/users/${res.body.id}`)
+      .put(`/api/users/${body.id}`)
       .send(userDataToUpdate)
-      .set("Authorization", `bearer ${res.body.token}`);
+      .set("Authorization", `bearer ${body.token}`);
     expect(updateRes.status).toBe(201);
     expect(updateRes.body.name).toBe("john junior");
   });

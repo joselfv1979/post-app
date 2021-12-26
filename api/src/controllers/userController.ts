@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import User, { IUser } from "../models/User";
+import { ErrorModel } from "../models/ErrorModel";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 
@@ -11,7 +12,6 @@ import {
   deleteUserService,
 } from "../services/userService";
 
-import { ErrorModel } from "../models/ErrorModel";
 
 export async function getUsersController(
   req: Request,
@@ -95,7 +95,7 @@ export async function deleteUserController(
   try {
     const { id } = req.params;
     await deleteUserService(new ObjectId(id));
-
+    
     res.status(204).end();
   } catch (error) {
     next(new ErrorModel(404, "User not found"));

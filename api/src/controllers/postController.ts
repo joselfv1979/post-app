@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthRequest } from "../middlewares/userExtractor";
 import Post, { IPost } from "../models/Post";
-import User, { IUser } from "../models/User";
+import User from "../models/User";
+import { ErrorModel } from "../models/ErrorModel";
 import { ObjectId } from "mongodb";
 
 import {
@@ -11,8 +12,6 @@ import {
   updatePostService,
   deletePostService,
 } from "../services/postService";
-
-import { ErrorModel } from "../models/ErrorModel";
 
 export async function getPostsController(
   req: AuthRequest,
@@ -55,7 +54,7 @@ export async function createPostController(
     const user = await User.findById(userId);
 
     if (!content) {
-      throw new ErrorModel(404, "Bad Request");
+      throw new ErrorModel(400, "Bad Request");
     }
 
     const newpost: IPost = new Post({
@@ -84,7 +83,7 @@ export async function updatePostController(
   try {
     const { id } = req.params;
     const post = await updatePostService(new ObjectId(id), req.body);
-    res.json(post);
+    res.status(201).json(post);
   } catch (error) {
     next(error);
   }
@@ -109,6 +108,6 @@ export async function deletePostController(
 
     res.status(204).end();
   } catch (error) {
-    next(error);
+    next(new ErrorModel(404, "Post not found"));
   }
 }

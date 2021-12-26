@@ -1,8 +1,22 @@
 import request from "supertest";
 import server from "../server";
 import User from "../models/User";
+import Post from "../models/Post";
 
 const api = request(server);
+
+export interface AuthRequest {
+  username: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  body: {
+    id: string,
+    username: string,
+    token: string
+  }
+}
 
 export const initialPosts = [
   {
@@ -18,6 +32,10 @@ export const initialPosts = [
     created: new Date(),
   },
 ];
+
+export const loginUser = async (user: AuthRequest) => {
+  return await api.post("/api/login").send(user);
+};
 
 export const getUser = async () => {
   const newUser = {
@@ -38,5 +56,14 @@ export const getUser = async () => {
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getInitialPosts = async (token: string) => {
+  for (const post of initialPosts) {
+    await api
+      .post("/api/posts")
+      .send(post)
+      .set("Authorization", `bearer ${token}`);
   }
 };
